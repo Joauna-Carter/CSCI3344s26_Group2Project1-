@@ -90,6 +90,7 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    #This problem was partially assisted by ChatGPT in the following way: step by step insight. I’ve verified and understood the resulting steps.
     stack = util.Stack()
     visited = set()
 

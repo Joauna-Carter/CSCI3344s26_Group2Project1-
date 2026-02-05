@@ -296,6 +296,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        #This problem was partially assisted by ChatGPT in the following way: step by step insight. I’ve verified and understood the resulting steps.
         visited = tuple(False for _ in self.corners)
         return (self.startingPosition, visited)
 
@@ -304,6 +305,7 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
+        #This problem was partially assisted by ChatGPT in the following way: step by step insight. I’ve verified and understood the resulting steps.
         _, visitedCorners = state
         return all(visitedCorners)
         
@@ -329,6 +331,7 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            #This problem was partially assisted by ChatGPT in the following way: step by step insight. I’ve verified and understood the resulting steps.
             x, y = state[0]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
@@ -374,6 +377,7 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+    #This problem was partially assisted by ChatGPT in the following way: step by step insight. I’ve verified and understood the resulting steps.
     position, visited = state
     unvisited = [corner for i, corner in enumerate(corners) if not visited[i]]
     if not unvisited:
