@@ -106,6 +106,7 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
             visited.add(state)
             for successor, action, cost in problem.getSuccessors(state):
                 stack.push((successor, path + [action]))
+    return []
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
@@ -125,6 +126,7 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
             visited.add(state)
             for successor, action, cost in problem.getSuccessors(state):
                 queue.push((successor, path + [action]))
+    return []
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
