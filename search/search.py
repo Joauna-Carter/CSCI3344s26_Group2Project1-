@@ -106,6 +106,7 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
             visited.add(state)
             for successor, action, cost in problem.getSuccessors(state):
                 stack.push((successor, path + [action]))
+    return []
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
@@ -125,6 +126,7 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
             visited.add(state)
             for successor, action, cost in problem.getSuccessors(state):
                 queue.push((successor, path + [action]))
+    return []
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
@@ -160,7 +162,37 @@ def nullHeuristic(state, problem=None) -> float:
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.PriorityQueue()
+
+    start_state = problem.getStartState()
+    start_g = 0
+    start_f = start_g + heuristic(start_state, problem)
+
+    # Node: (state, path, gCost)
+    frontier.push((start_state, [], start_g), start_f)
+
+    # best_g[state] = lowest path cost found so far to reach state
+    best_g = {start_state: 0}
+
+    while not frontier.isEmpty():
+        state, path, g = frontier.pop()
+
+        # If this is not the best known cost to this state, skip it
+        if g > best_g.get(state, float("inf")):
+            continue
+
+        if problem.isGoalState(state):
+            return path
+
+        for successor, action, step_cost in problem.getSuccessors(state):
+            new_g = g + step_cost
+            if new_g < best_g.get(successor, float("inf")):
+                best_g[successor] = new_g
+                new_path = path + [action]
+                new_f = new_g + heuristic(successor, problem)
+                frontier.push((successor, new_path, new_g), new_f)
+
+    return []
 
 # Abbreviations
 bfs = breadthFirstSearch

@@ -478,7 +478,18 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     if not foodList:
         return 0
     distances = [util.manhattanDistance(position, food) for food in foodList]
-    return max(distances)
+    minDistanceToFood = min(distances)
+    if len(foodList) > 1: 
+        maxFoodDistance = 0
+        for food1 in foodList:
+            for food2 in foodList:
+                tempD = util.manhattanDistance(food1, food2)
+                if maxFoodDistance < tempD:
+                    maxFoodDistance = tempD
+    else: 
+        maxFoodDistance = 0
+    return minDistanceToFood + maxFoodDistance
+
 
 
 class ClosestDotSearchAgent(SearchAgent):
