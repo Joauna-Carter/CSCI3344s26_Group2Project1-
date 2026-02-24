@@ -494,6 +494,7 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+    """
     foodList = foodGrid.asList()
     if not foodList:
         return 0
@@ -509,6 +510,82 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     else: 
         maxFoodDistance = 0
     return minDistanceToFood + maxFoodDistance
+    """
+    """ This code belows allows us to get 5/4. Heuristic estimates remaining path cost by combining the maze distance
+    from Pacman to the nearest food with the minimum spanning tree (MST)
+    cost connecting all remaining food dots. Maze distances are cached to
+    avoid repeated searches, producing an admissible heuristic that reduces
+    A* node expansions.
+    """
+    #This problem was partially assisted by ChatGPT in the following way: conceptual guidance on heuristic optimization. I’ve verified and understood the resulting steps
+    foodList = foodGrid.asList()
+
+    # Goal state
+    if not foodList:
+        return 0
+
+    # Create caches if they do not exist
+    if 'mazeDistances' not in problem.heuristicInfo:
+        problem.heuristicInfo['mazeDistances'] = {}
+
+    if 'mstCosts' not in problem.heuristicInfo:
+        problem.heuristicInfo['mstCosts'] = {}
+
+    mazeCache = problem.heuristicInfo['mazeDistances']
+    mstCache = problem.heuristicInfo['mstCosts']
+
+    # ---------- helper: cached maze distance ----------
+    def getMazeDist(p1, p2):
+        if p1 == p2:
+            return 0
+
+        key = (p1, p2)
+        if key in mazeCache:
+            return mazeCache[key]
+
+        d = mazeDistance(p1, p2, problem.startingGameState)
+
+        # store symmetric distances
+        mazeCache[(p1, p2)] = d
+        mazeCache[(p2, p1)] = d
+        return d
+
+    # ---------- distance from Pacman to closest food ----------
+    minToFood = min(getMazeDist(position, food) for food in foodList)
+
+    # ---------- MST cost among food dots ----------
+    foodKey = frozenset(foodList)
+
+    if foodKey in mstCache:
+        mstCost = mstCache[foodKey]
+    else:
+        remaining = set(foodList)
+        start = next(iter(remaining))
+        remaining.remove(start)
+
+        visited = {start}
+        mstCost = 0
+
+        # Prim's algorithm
+        while remaining:
+            bestDist = float("inf")
+            bestNode = None
+
+            for v in visited:
+                for u in remaining:
+                    d = getMazeDist(v, u)
+                    if d < bestDist:
+                        bestDist = d
+                        bestNode = u
+
+            mstCost += bestDist
+            visited.add(bestNode)
+            remaining.remove(bestNode)
+
+        mstCache[foodKey] = mstCost
+
+    # Final admissible estimate
+    return minToFood + mstCost
 
 
 
